@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="前提waframe 本身是不支持 linux 的, 我们可以通过lutris来下载并使用 wine 玩耍。 下载就先不说了 有需要在更新 本地化因为 lutris 下载后的默认语言是 En，然后本人英语又巨差，目前市面上也没有很好的本地化方法，故写一下咯。 Lutris 下载的游戏一般会在 Home 目录下新建一个 Games 的文件夹。 于是 waframe 的路径就是&#x2F;home&#x2F;Games&#x2F;w">
+<meta property="og:type" content="article">
+<meta property="og:title" content="warframe linux 玩耍+本地化">
+<meta property="og:url" content="http://ieast.github.io/2020/07/21/warframe/index.html">
+<meta property="og:site_name" content="EastDong&#39;s Blog">
+<meta property="og:description" content="前提waframe 本身是不支持 linux 的, 我们可以通过lutris来下载并使用 wine 玩耍。 下载就先不说了 有需要在更新 本地化因为 lutris 下载后的默认语言是 En，然后本人英语又巨差，目前市面上也没有很好的本地化方法，故写一下咯。 Lutris 下载的游戏一般会在 Home 目录下新建一个 Games 的文件夹。 于是 waframe 的路径就是&#x2F;home&#x2F;Games&#x2F;w">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-07-21T03:19:08.000Z">
+<meta property="article:modified_time" content="2023-08-28T08:26:50.005Z">
+<meta property="article:author" content="eastdong">
+<meta property="article:tag" content="game">
+<meta property="article:tag" content="warframe">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>warframe linux 玩耍+本地化</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-QSLGQRJWYR"></script>
+  <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-QSLGQRJWYR');
+  </script>
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/probberechts">项目</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇" href="/2022/04/18/git-%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8C%97/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/2020/07/21/text/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://ieast.github.io/2020/07/21/warframe/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://ieast.github.io/2020/07/21/warframe/&text=warframe linux 玩耍+本地化"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://ieast.github.io/2020/07/21/warframe/&title=warframe linux 玩耍+本地化"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://ieast.github.io/2020/07/21/warframe/&is_video=false&description=warframe linux 玩耍+本地化"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=warframe linux 玩耍+本地化&body=Check out this article: http://ieast.github.io/2020/07/21/warframe/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://ieast.github.io/2020/07/21/warframe/&title=warframe linux 玩耍+本地化"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://ieast.github.io/2020/07/21/warframe/&title=warframe linux 玩耍+本地化"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://ieast.github.io/2020/07/21/warframe/&title=warframe linux 玩耍+本地化"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://ieast.github.io/2020/07/21/warframe/&title=warframe linux 玩耍+本地化"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://ieast.github.io/2020/07/21/warframe/&name=warframe linux 玩耍+本地化&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://ieast.github.io/2020/07/21/warframe/&t=warframe linux 玩耍+本地化"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E6%8F%90"><span class="toc-number">1.</span> <span class="toc-text">前提</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%AC%E5%9C%B0%E5%8C%96"><span class="toc-number">2.</span> <span class="toc-text">本地化</span></a></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        warframe linux 玩耍+本地化
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">eastdong</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2020-07-21T03:19:08.000Z" class="dt-published" itemprop="datePublished">2020-07-21</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/game/" rel="tag">game</a>, <a class="p-category" href="/tags/warframe/" rel="tag">warframe</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <h2 id="前提"><a href="#前提" class="headerlink" title="前提"></a>前提</h2><p>waframe 本身是不支持 linux 的, 我们可以通过<a target="_blank" rel="noopener" href="https://lutris.net/">lutris</a>来下载并使用 wine 玩耍。</p>
+<p>下载就先不说了 有需要在更新</p>
+<h2 id="本地化"><a href="#本地化" class="headerlink" title="本地化"></a>本地化</h2><p>因为 lutris 下载后的默认语言是 En，然后本人英语又巨差，目前市面上也没有很好的本地化方法，故写一下咯。</p>
+<p>Lutris 下载的游戏一般会在 Home 目录下新建一个 Games 的文件夹。</p>
+<p>于是 waframe 的路径就是<code>/home/Games/warframe/drive_c/Program Files/Warframe</code></p>
+<p>我们打开 <code>updater.sh </code>文件拉到最下方</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># run warframe internal updater</span></span><br><span class="line">	<span class="string">&quot;<span class="variable">$WINE</span>&quot;</span> cmd /C <span class="string">&quot;<span class="variable">$WINPATH</span>&quot;</span> -silent -<span class="built_in">log</span>:/Preprocessing.<span class="built_in">log</span> -dx10:1 -dx11:1 -threadedworker:1 -cluster:public -language:zh -applet:/EE/Types/Framework/ContentUpdate</span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">#############################################################</span></span><br><span class="line"><span class="comment"># cache optimization</span></span><br><span class="line"><span class="comment">#############################################################</span></span><br><span class="line"><span class="keyword">if</span> [ <span class="string">&quot;<span class="variable">$do_cache</span>&quot;</span> = <span class="literal">true</span> ] ; <span class="keyword">then</span></span><br><span class="line">	<span class="built_in">echo</span> <span class="string">&quot;*********************&quot;</span></span><br><span class="line">	<span class="built_in">echo</span> <span class="string">&quot;Optimizing Cache.&quot;</span></span><br><span class="line">	<span class="built_in">echo</span> <span class="string">&quot;*********************&quot;</span></span><br><span class="line">	<span class="string">&quot;<span class="variable">$WINE</span>&quot;</span> cmd /C <span class="string">&quot;<span class="variable">$WINPATH</span>&quot;</span>  -silent -<span class="built_in">log</span>:/Preprocessing.<span class="built_in">log</span> -dx10:1 -dx11:1 -threadedworker:1 -cluster:public -language:zh -applet:/EE/Types/Framework/CacheDefraggerAsync /Tools/CachePlan.txt</span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">#############################################################</span></span><br><span class="line"><span class="comment"># actually start the game</span></span><br><span class="line"><span class="comment">#############################################################</span></span><br><span class="line"><span class="keyword">if</span> [ <span class="string">&quot;<span class="variable">$start_game</span>&quot;</span> = <span class="literal">true</span> ] ; <span class="keyword">then</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;*********************&quot;</span></span><br><span class="line">	<span class="built_in">echo</span> <span class="string">&quot;Launching Warframe.&quot;</span></span><br><span class="line">	<span class="built_in">echo</span> <span class="string">&quot;*********************&quot;</span></span><br><span class="line"></span><br><span class="line">	<span class="string">&quot;<span class="variable">$WINE</span>&quot;</span> cmd /C start /b <span class="string">&quot;&quot;</span> <span class="string">&quot;<span class="variable">$WINPATH</span>&quot;</span> -<span class="built_in">log</span>:/Preprocessing.<span class="built_in">log</span> -dx10:1 -dx11:1 -threadedworker:1 -cluster:public -language:zh</span><br><span class="line"><span class="keyword">fi</span></span><br></pre></td></tr></table></figure>
+
+<p>直接把三个 <code>public -language:</code>后面的参数改成 zh 就好了。<br>前提是你语言有选中文编码。</p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">首页</a></li>
+        
+          <li><a href="/about/">关于</a></li>
+        
+          <li><a href="/archives/">归档</a></li>
+        
+          <li><a target="_blank" rel="noopener" href="http://github.com/probberechts">项目</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E6%8F%90"><span class="toc-number">1.</span> <span class="toc-text">前提</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%AC%E5%9C%B0%E5%8C%96"><span class="toc-number">2.</span> <span class="toc-text">本地化</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://ieast.github.io/2020/07/21/warframe/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://ieast.github.io/2020/07/21/warframe/&text=warframe linux 玩耍+本地化"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://ieast.github.io/2020/07/21/warframe/&title=warframe linux 玩耍+本地化"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://ieast.github.io/2020/07/21/warframe/&is_video=false&description=warframe linux 玩耍+本地化"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=warframe linux 玩耍+本地化&body=Check out this article: http://ieast.github.io/2020/07/21/warframe/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://ieast.github.io/2020/07/21/warframe/&title=warframe linux 玩耍+本地化"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://ieast.github.io/2020/07/21/warframe/&title=warframe linux 玩耍+本地化"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://ieast.github.io/2020/07/21/warframe/&title=warframe linux 玩耍+本地化"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://ieast.github.io/2020/07/21/warframe/&title=warframe linux 玩耍+本地化"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://ieast.github.io/2020/07/21/warframe/&name=warframe linux 玩耍+本地化&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://ieast.github.io/2020/07/21/warframe/&t=warframe linux 玩耍+本地化"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2020-2023
+    eastdong
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/probberechts">项目</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>

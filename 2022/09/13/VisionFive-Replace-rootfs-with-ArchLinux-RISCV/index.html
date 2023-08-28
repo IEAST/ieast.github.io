@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="板子风扇是淘宝买的，关键词是： 芯片  南桥北桥  风扇4cm 准备 micro-SD card ( &gt; 16G) &amp; 读卡器 usb 转 UART 模块 usb tpye-c 供电线  PS: usb 串口模块接串口的时候，需 板子上的 RX 接电脑的 TX. 按照官方手册下载 Fedora 镜像并且写入 sd 卡手册链接: VisionFive SBC Quick Start G">
+<meta property="og:type" content="article">
+<meta property="og:title" content="给 VisonFive 安装 ArchLinux">
+<meta property="og:url" content="http://ieast.github.io/2022/09/13/VisionFive-Replace-rootfs-with-ArchLinux-RISCV/index.html">
+<meta property="og:site_name" content="EastDong&#39;s Blog">
+<meta property="og:description" content="板子风扇是淘宝买的，关键词是： 芯片  南桥北桥  风扇4cm 准备 micro-SD card ( &gt; 16G) &amp; 读卡器 usb 转 UART 模块 usb tpye-c 供电线  PS: usb 串口模块接串口的时候，需 板子上的 RX 接电脑的 TX. 按照官方手册下载 Fedora 镜像并且写入 sd 卡手册链接: VisionFive SBC Quick Start G">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://ieast.github.io/2022/09/13/VisionFive-Replace-rootfs-with-ArchLinux-RISCV/1.jpg">
+<meta property="og:image" content="http://ieast.github.io/2022/09/13/VisionFive-Replace-rootfs-with-ArchLinux-RISCV/2.jpg">
+<meta property="article:published_time" content="2022-09-13T03:35:29.000Z">
+<meta property="article:modified_time" content="2023-08-28T08:26:49.998Z">
+<meta property="article:author" content="eastdong">
+<meta property="article:tag" content="RISC-V">
+<meta property="article:tag" content="AarchLinux">
+<meta property="article:tag" content="VisionFive">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://ieast.github.io/2022/09/13/VisionFive-Replace-rootfs-with-ArchLinux-RISCV/1.jpg">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>给 VisonFive 安装 ArchLinux</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-QSLGQRJWYR"></script>
+  <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-QSLGQRJWYR');
+  </script>
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/probberechts">项目</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇" href="/2023/04/12/yum-%E4%B8%8D%E5%AE%8C%E5%85%A8%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/2022/08/29/love-and-hatred-with-firefox/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://ieast.github.io/2022/09/13/VisionFive-Replace-rootfs-with-ArchLinux-RISCV/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://ieast.github.io/2022/09/13/VisionFive-Replace-rootfs-with-ArchLinux-RISCV/&text=给 VisonFive 安装 ArchLinux"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://ieast.github.io/2022/09/13/VisionFive-Replace-rootfs-with-ArchLinux-RISCV/&title=给 VisonFive 安装 ArchLinux"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://ieast.github.io/2022/09/13/VisionFive-Replace-rootfs-with-ArchLinux-RISCV/&is_video=false&description=给 VisonFive 安装 ArchLinux"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=给 VisonFive 安装 ArchLinux&body=Check out this article: http://ieast.github.io/2022/09/13/VisionFive-Replace-rootfs-with-ArchLinux-RISCV/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://ieast.github.io/2022/09/13/VisionFive-Replace-rootfs-with-ArchLinux-RISCV/&title=给 VisonFive 安装 ArchLinux"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://ieast.github.io/2022/09/13/VisionFive-Replace-rootfs-with-ArchLinux-RISCV/&title=给 VisonFive 安装 ArchLinux"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://ieast.github.io/2022/09/13/VisionFive-Replace-rootfs-with-ArchLinux-RISCV/&title=给 VisonFive 安装 ArchLinux"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://ieast.github.io/2022/09/13/VisionFive-Replace-rootfs-with-ArchLinux-RISCV/&title=给 VisonFive 安装 ArchLinux"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://ieast.github.io/2022/09/13/VisionFive-Replace-rootfs-with-ArchLinux-RISCV/&name=给 VisonFive 安装 ArchLinux&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://ieast.github.io/2022/09/13/VisionFive-Replace-rootfs-with-ArchLinux-RISCV/&t=给 VisonFive 安装 ArchLinux"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9D%BF%E5%AD%90"><span class="toc-number">1.</span> <span class="toc-text">板子</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%87%86%E5%A4%87"><span class="toc-number">2.</span> <span class="toc-text">准备</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8C%89%E7%85%A7%E5%AE%98%E6%96%B9%E6%89%8B%E5%86%8C%E4%B8%8B%E8%BD%BD-Fedora-%E9%95%9C%E5%83%8F%E5%B9%B6%E4%B8%94%E5%86%99%E5%85%A5-sd-%E5%8D%A1"><span class="toc-number">3.</span> <span class="toc-text">按照官方手册下载 Fedora 镜像并且写入 sd 卡</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9B%BF%E6%8D%A2-rootfs"><span class="toc-number">4.</span> <span class="toc-text">替换 rootfs</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE%E7%BD%91%E7%BB%9C"><span class="toc-number">5.</span> <span class="toc-text">配置网络</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B3%A8%E6%84%8F"><span class="toc-number">6.</span> <span class="toc-text">注意</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">6.1.</span> <span class="toc-text">参考:</span></a></li></ol></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        给 VisonFive 安装 ArchLinux
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">eastdong</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2022-09-13T03:35:29.000Z" class="dt-published" itemprop="datePublished">2022-09-13</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/RISC-V/">RISC-V</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/AarchLinux/" rel="tag">AarchLinux</a>, <a class="p-category" href="/tags/RISC-V/" rel="tag">RISC-V</a>, <a class="p-category" href="/tags/VisionFive/" rel="tag">VisionFive</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <h2 id="板子"><a href="#板子" class="headerlink" title="板子"></a>板子</h2><p><img src="/2022/09/13/VisionFive-Replace-rootfs-with-ArchLinux-RISCV/1.jpg"><br>风扇是淘宝买的，关键词是： 芯片  南桥北桥  风扇4cm<br><img src="/2022/09/13/VisionFive-Replace-rootfs-with-ArchLinux-RISCV/2.jpg"></p>
+<h2 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h2><ol>
+<li>micro-SD card ( &gt; 16G) &amp; 读卡器</li>
+<li>usb 转 UART 模块</li>
+<li>usb tpye-c 供电线</li>
+</ol>
+<p><em>PS:</em> usb 串口模块接串口的时候，需 <strong>板子上的 RX 接电脑的 TX</strong>.</p>
+<h2 id="按照官方手册下载-Fedora-镜像并且写入-sd-卡"><a href="#按照官方手册下载-Fedora-镜像并且写入-sd-卡" class="headerlink" title="按照官方手册下载 Fedora 镜像并且写入 sd 卡"></a>按照官方手册下载 Fedora 镜像并且写入 sd 卡</h2><p>手册链接: <a target="_blank" rel="noopener" href="https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=&cad=rja&uact=8&ved=2ahUKEwjn-8Ss8pD6AhWG-2EKHYzmCHEQFnoECAkQAQ&url=https://starfivetech.com/uploads/VisionFive%2520Single%2520Board%2520Computer%2520Quick%2520Start%2520Guide.pdf&usg=AOvVaw0LhpUFxlCjfywrGSvSO-Mt">VisionFive SBC Quick Start Guide</a></p>
+<p>镜像地址: <a target="_blank" rel="noopener" href="https://github.com/starfive-tech/Fedora_on_StarFive">https://github.com/starfive-tech/Fedora_on_StarFive</a></p>
+<p>下载后得到<code>Fedora-riscv64-jh7100-developer-xfce-Rawhide-20211226-214100.n.0-sda.raw.zst</code></p>
+<p>使用<code>zstd -d Fedora-riscv64-jh7100-developer-xfce-Rawhide-20211226-214100.n.0-sda.raw.zst</code> 解压得到<code>Fedora-riscv64-jh7100-developer-xfce-Rawhide-20211226-214100.n.0-sda.raw</code></p>
+<p>将 sd 卡插入电脑，并将镜像文件写入 sd 卡。（此过程耗时较久）</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 可以使用 fdisk 等软件来确认sd卡的位置</span></span><br><span class="line"></span><br><span class="line"><span class="comment">## 注意替换 of 中的 /dev/sdX</span></span><br><span class="line">sudo <span class="built_in">dd</span> <span class="keyword">if</span>=Fedora-riscv64-jh7100-developer-xfce-Rawhide-20211226-214100.n.0-sda.raw of=/dev/sdX bs=8M status=progress &amp;&amp; <span class="built_in">sync</span></span><br><span class="line"></span><br><span class="line">13589544960 bytes (14 GB, 13 GiB) copied, 1201 s, 11.3 MB/s</span><br><span class="line">1620+0 records <span class="keyword">in</span></span><br><span class="line">1620+0 records out</span><br><span class="line">13589544960 bytes (14 GB, 13 GiB) copied, 1424.52 s, 9.5 MB/s</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="替换-rootfs"><a href="#替换-rootfs" class="headerlink" title="替换 rootfs"></a>替换 rootfs</h2><ol>
+<li><p>挂载 sd 卡的内容到<code>/mnt</code></p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#此处以 /dev/sda4 为例子</span></span><br><span class="line">sudo mount /dev/sda4 /mnt</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>在<code>mnt</code>下创建<code>old</code> <code>new</code>两个目录</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /mnt</span><br><span class="line">sudo <span class="built_in">mkdir</span> new old</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>下载 <a target="_blank" rel="noopener" href="https://archriscv.felixc.at/images/archriscv-20220727.tar.zst"><code>archriscv-20220727.tar.zst</code></a>,并解压到<code>new</code>目录</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> new</span><br><span class="line">sudo bsdtar -xvf archriscv-20220727.tar.zst</span><br></pre></td></tr></table></figure></li>
+<li><p>启动 Fedora Linux RISC-V 虚拟机</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 看到设备以及从 本机（East）,变为 fedora 了</span></span><br><span class="line">[eastdong@East ~]$ sudo systemd-nspawn -D /mnt/ --machine fedora -a -U</span><br><span class="line">Spawning container fedora on /mnt.</span><br><span class="line">Press ^] three <span class="built_in">times</span> within 1s to <span class="built_in">kill</span> container.</span><br><span class="line">Selected user namespace base 277413888 and range 65536.</span><br><span class="line">[root@fedora ~]<span class="comment">#</span></span><br></pre></td></tr></table></figure></li>
+<li><p>开始更换 rootfs</p>
+<ol>
+<li><p>记住一些路径</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">/new/lib/    <span class="comment"># 后面步骤中会设置为 LD_LIBRARY_PATH</span></span><br><span class="line">/new/lib/ld-linux-riscv64-lp64d.so.1</span><br></pre></td></tr></table></figure></li>
+<li><p>移动文件夹</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mv</span> etc home media mnt opt root srv var old/ <span class="comment"># 保留 boot</span></span><br><span class="line"><span class="built_in">mv</span> new/etc new/home new/mnt new/opt new/root new/srv new/var ./</span><br></pre></td></tr></table></figure></li>
+<li><p>继续移动文件夹</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">LD_LIBRARY_PATH=/new/lib/ /new/lib/ld-linux-riscv64-lp64d.so.1 /new/bin/mv bin sbin usr lib old/</span><br><span class="line">LD_LIBRARY_PATH=/new/lib/ /new/lib/ld-linux-riscv64-lp64d.so.1 /new/bin/mv new/bin new/sbin new/usr new/lib ./</span><br><span class="line"></span><br><span class="line"><span class="built_in">mv</span> old/lib/firmware ./lib/</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>移动<code>kernel modules</code></p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mv</span> old/usr/lib/modules/ ./lib/</span><br></pre></td></tr></table></figure></li>
+<li><p>复制<code>fstab</code></p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mv</span> /old/etc/fstab ./etc/</span><br></pre></td></tr></table></figure></li>
+</ol>
+</li>
+<li><p>退出登陆，再次开始虚拟机的时候系统就变成 archlinux 了。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@fedora ~] <span class="built_in">uname</span> -a</span><br><span class="line">Linux fedora 5.19.7-arch1-1 <span class="comment">#1 SMP PREEMPT_DYNAMIC Mon, 05 Sep 2022 18:09:09 +0000 riscv64 GNU/Linux</span></span><br></pre></td></tr></table></figure></li>
+<li><p>下载一些常用软件，并更新数据库</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">pacman -Syyu</span><br><span class="line">pacman -S bash-completion vim <span class="comment"># wpa_supplicant</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>取消挂载，将 sd 卡插入板子。更换 archriscv 后的用户名<code>root</code>,密码<code>sifive</code> 。</p>
+</li>
+<li><p>连接串口，使用<code>sudo picocom -b 115200 /dev/ttyUSB0</code>连接串口查看板子情况。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">uname</span> -a</span><br><span class="line">Linux fedora-starfive 5.15.10+ <span class="comment">#1 SMP Fri Dec 24 14:24:27 CST 2021 riscv64 GNU/Linux</span></span><br></pre></td></tr></table></figure></li>
+</ol>
+<h2 id="配置网络"><a href="#配置网络" class="headerlink" title="配置网络"></a>配置网络</h2><ol>
+<li><p>这边使用的是<code>systemd-network</code>来进行有线连接。</p>
+</li>
+<li><p>使用<code>ip a</code>查看网口信息。</p>
+</li>
+<li><p>编译<code>/etc/systemd/network/default.network</code></p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[Match]</span><br><span class="line">Name=eth* <span class="comment">#我这边有线的命名是 eth0</span></span><br><span class="line"></span><br><span class="line">[Network]</span><br><span class="line">DHCP=<span class="built_in">yes</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>重新加载网络,此时网络应该已经成功连接。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl restart systemd-netwokd</span><br></pre></td></tr></table></figure></li>
+<li><p>测试一下网络</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">ping 8.8.8.8</span><br><span class="line"></span><br><span class="line">PING 8.8.8.8 (8.8.8.8) 56(84) bytes of data.</span><br><span class="line">64 bytes from 8.8.8.8: icmp_seq=1 ttl=120 time=34.6 ms</span><br><span class="line">64 bytes from 8.8.8.8: icmp_seq=2 ttl=120 time=34.2 ms</span><br><span class="line">64 bytes from 8.8.8.8: icmp_seq=3 ttl=120 time=34.2 ms</span><br><span class="line">64 bytes from 8.8.8.8: icmp_seq=4 ttl=120 time=35.8 ms</span><br><span class="line">64 bytes from 8.8.8.8: icmp_seq=5 ttl=120 time=35.2 ms</span><br><span class="line"></span><br><span class="line">--- 8.8.8.8 ping statistics ---</span><br><span class="line">5 packets transmitted, 5 received, 0% packet loss, time 4006ms</span><br><span class="line">rtt min/avg/max/mdev = 34.240/34.827/35.849/0.621 ms</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>开机自动连网络</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl <span class="built_in">enable</span> systemd-netwokd</span><br></pre></td></tr></table></figure></li>
+<li><p>同步时间</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl start systemd-timesyncd</span><br></pre></td></tr></table></figure>
+<p>后面就可以愉快的玩耍啦</p>
+</li>
+</ol>
+<h2 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h2><p>本次替换使用的 host 是 ArchLinux , 有些命令并不适用所有操作系统。</p>
+<hr>
+<h3 id="参考"><a href="#参考" class="headerlink" title="参考:"></a>参考:</h3><ol>
+<li><a target="_blank" rel="noopener" href="https://github.com/felixonmars/archriscv-packages/wiki/RV64-%E6%9D%BF%E5%AD%90%E6%9B%B4%E6%8D%A2-rootfs-%E6%8C%87%E5%8D%97">RV64 板子更换 rootfs 指南</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/felixonmars/archriscv-packages/wiki/%E5%93%AA%E5%90%92-D1-%E9%80%9A%E8%BF%87-TF-%E5%8D%A1%E8%BF%90%E8%A1%8C-Arch-Linux-RISC-V-rootfs#%E6%9B%BF%E6%8D%A2-arch-linux--risc-v-rootfs">哪吒 D1 通过 TF 卡运行 Arch Linux RISC V rootfs</a></li>
+<li><a target="_blank" rel="noopener" href="https://starfivetech.com/uploads/VisionFive%20Single%20Board%20Computer%20Quick%20Start%20Guide.pdf">VisionFive SBC Quick Start Guide</a></li>
+</ol>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">首页</a></li>
+        
+          <li><a href="/about/">关于</a></li>
+        
+          <li><a href="/archives/">归档</a></li>
+        
+          <li><a target="_blank" rel="noopener" href="http://github.com/probberechts">项目</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9D%BF%E5%AD%90"><span class="toc-number">1.</span> <span class="toc-text">板子</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%87%86%E5%A4%87"><span class="toc-number">2.</span> <span class="toc-text">准备</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8C%89%E7%85%A7%E5%AE%98%E6%96%B9%E6%89%8B%E5%86%8C%E4%B8%8B%E8%BD%BD-Fedora-%E9%95%9C%E5%83%8F%E5%B9%B6%E4%B8%94%E5%86%99%E5%85%A5-sd-%E5%8D%A1"><span class="toc-number">3.</span> <span class="toc-text">按照官方手册下载 Fedora 镜像并且写入 sd 卡</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9B%BF%E6%8D%A2-rootfs"><span class="toc-number">4.</span> <span class="toc-text">替换 rootfs</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE%E7%BD%91%E7%BB%9C"><span class="toc-number">5.</span> <span class="toc-text">配置网络</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B3%A8%E6%84%8F"><span class="toc-number">6.</span> <span class="toc-text">注意</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">6.1.</span> <span class="toc-text">参考:</span></a></li></ol></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://ieast.github.io/2022/09/13/VisionFive-Replace-rootfs-with-ArchLinux-RISCV/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://ieast.github.io/2022/09/13/VisionFive-Replace-rootfs-with-ArchLinux-RISCV/&text=给 VisonFive 安装 ArchLinux"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://ieast.github.io/2022/09/13/VisionFive-Replace-rootfs-with-ArchLinux-RISCV/&title=给 VisonFive 安装 ArchLinux"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://ieast.github.io/2022/09/13/VisionFive-Replace-rootfs-with-ArchLinux-RISCV/&is_video=false&description=给 VisonFive 安装 ArchLinux"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=给 VisonFive 安装 ArchLinux&body=Check out this article: http://ieast.github.io/2022/09/13/VisionFive-Replace-rootfs-with-ArchLinux-RISCV/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://ieast.github.io/2022/09/13/VisionFive-Replace-rootfs-with-ArchLinux-RISCV/&title=给 VisonFive 安装 ArchLinux"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://ieast.github.io/2022/09/13/VisionFive-Replace-rootfs-with-ArchLinux-RISCV/&title=给 VisonFive 安装 ArchLinux"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://ieast.github.io/2022/09/13/VisionFive-Replace-rootfs-with-ArchLinux-RISCV/&title=给 VisonFive 安装 ArchLinux"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://ieast.github.io/2022/09/13/VisionFive-Replace-rootfs-with-ArchLinux-RISCV/&title=给 VisonFive 安装 ArchLinux"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://ieast.github.io/2022/09/13/VisionFive-Replace-rootfs-with-ArchLinux-RISCV/&name=给 VisonFive 安装 ArchLinux&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://ieast.github.io/2022/09/13/VisionFive-Replace-rootfs-with-ArchLinux-RISCV/&t=给 VisonFive 安装 ArchLinux"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2020-2023
+    eastdong
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/probberechts">项目</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>

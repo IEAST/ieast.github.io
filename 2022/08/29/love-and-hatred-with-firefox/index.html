@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="起因firefox 102 build 的时候会报错找不到 intersection 方法。 1234567891011121314151617181920212223242526272829101:24.74 error[E0599]: no method named &#96;intersection&#96; found for struct &#96;FeatureFlags&#96; in the current sc">
+<meta property="og:type" content="article">
+<meta property="og:title" content="与 firefox 的爱恨情仇">
+<meta property="og:url" content="http://ieast.github.io/2022/08/29/love-and-hatred-with-firefox/index.html">
+<meta property="og:site_name" content="EastDong&#39;s Blog">
+<meta property="og:description" content="起因firefox 102 build 的时候会报错找不到 intersection 方法。 1234567891011121314151617181920212223242526272829101:24.74 error[E0599]: no method named &#96;intersection&#96; found for struct &#96;FeatureFlags&#96; in the current sc">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://ieast.github.io/2022/08/29/love-and-hatred-with-firefox/1.jpg">
+<meta property="og:image" content="http://ieast.github.io/2022/08/29/love-and-hatred-with-firefox/1.2.1.jpg">
+<meta property="article:published_time" content="2022-08-29T05:29:16.000Z">
+<meta property="article:modified_time" content="2023-08-28T08:26:50.005Z">
+<meta property="article:author" content="eastdong">
+<meta property="article:tag" content="RISC-V">
+<meta property="article:tag" content="firefox">
+<meta property="article:tag" content="archlinux">
+<meta property="article:tag" content="rust">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://ieast.github.io/2022/08/29/love-and-hatred-with-firefox/1.jpg">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>与 firefox 的爱恨情仇</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-QSLGQRJWYR"></script>
+  <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-QSLGQRJWYR');
+  </script>
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/probberechts">项目</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇" href="/2022/09/13/VisionFive-Replace-rootfs-with-ArchLinux-RISCV/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/2022/05/05/%E5%B8%B8%E7%94%A8%E5%B7%A5%E5%85%B7/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://ieast.github.io/2022/08/29/love-and-hatred-with-firefox/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://ieast.github.io/2022/08/29/love-and-hatred-with-firefox/&text=与 firefox 的爱恨情仇"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://ieast.github.io/2022/08/29/love-and-hatred-with-firefox/&title=与 firefox 的爱恨情仇"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://ieast.github.io/2022/08/29/love-and-hatred-with-firefox/&is_video=false&description=与 firefox 的爱恨情仇"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=与 firefox 的爱恨情仇&body=Check out this article: http://ieast.github.io/2022/08/29/love-and-hatred-with-firefox/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://ieast.github.io/2022/08/29/love-and-hatred-with-firefox/&title=与 firefox 的爱恨情仇"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://ieast.github.io/2022/08/29/love-and-hatred-with-firefox/&title=与 firefox 的爱恨情仇"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://ieast.github.io/2022/08/29/love-and-hatred-with-firefox/&title=与 firefox 的爱恨情仇"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://ieast.github.io/2022/08/29/love-and-hatred-with-firefox/&title=与 firefox 的爱恨情仇"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://ieast.github.io/2022/08/29/love-and-hatred-with-firefox/&name=与 firefox 的爱恨情仇&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://ieast.github.io/2022/08/29/love-and-hatred-with-firefox/&t=与 firefox 的爱恨情仇"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%B5%B7%E5%9B%A0"><span class="toc-number">1.</span> <span class="toc-text">起因</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8A%98%E8%85%BE-cargo-expand"><span class="toc-number">1.1.</span> <span class="toc-text">折腾 cargo expand</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A2%AB%E7%82%B9%E9%86%92"><span class="toc-number">2.</span> <span class="toc-text">被点醒</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BF%99%E4%B8%AA-patch-%E6%80%8E%E4%B9%88%E8%BF%99%E4%B9%88%E5%A4%A7"><span class="toc-number">3.</span> <span class="toc-text">这个 patch 怎么这么大</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#mach-vendor-rust"><span class="toc-number">4.</span> <span class="toc-text">.&#x2F;mach vendor rust</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%9D%E6%AC%A1%E4%BD%BF%E7%94%A8"><span class="toc-number">4.1.</span> <span class="toc-text">初次使用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#mach-vendor-rust-ignore-modified"><span class="toc-number">4.2.</span> <span class="toc-text">.&#x2F;mach vendor rust --ignore-modified</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9B%B4%E6%8D%A2%E6%80%9D%E8%B7%AF"><span class="toc-number">5.</span> <span class="toc-text">更换思路</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#mach-vendor-rust-ignore-modified-%E6%9C%89-VCS-%E7%8A%B6%E6%80%81%E4%B8%8B"><span class="toc-number">5.1.</span> <span class="toc-text">.&#x2F;mach vendor rust --ignore-modified 有 VCS 状态下</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="toc-number">5.2.</span> <span class="toc-text">解决方案</span></a></li></ol></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        与 firefox 的爱恨情仇
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">eastdong</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2022-08-29T05:29:16.000Z" class="dt-published" itemprop="datePublished">2022-08-29</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/RISC-V/">RISC-V</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/RISC-V/" rel="tag">RISC-V</a>, <a class="p-category" href="/tags/archlinux/" rel="tag">archlinux</a>, <a class="p-category" href="/tags/firefox/" rel="tag">firefox</a>, <a class="p-category" href="/tags/rust/" rel="tag">rust</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <h2 id="起因"><a href="#起因" class="headerlink" title="起因"></a>起因</h2><p>firefox 102 build 的时候会报错找不到 <code>intersection</code> 方法。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">101:24.74 error[E0599]: no method named `intersection` found <span class="keyword">for</span> struct `FeatureFlags` <span class="keyword">in</span> the current scope</span><br><span class="line">101:24.74    --&gt; servo/components/style/queries/feature.rs:126:14</span><br><span class="line">101:24.74     |</span><br><span class="line">101:24.74 103 | / bitflags! &#123;</span><br><span class="line">101:24.74 104 | |     /// Different flags or toggles that change how a expression is parsed or</span><br><span class="line">101:24.74 105 | |     /// evaluated.</span><br><span class="line">101:24.74 106 | |     <span class="comment">#[derive(ToShmem)]</span></span><br><span class="line">101:24.74 ...   |</span><br><span class="line">101:24.74 120 | |     &#125;</span><br><span class="line">101:24.74 121 | | &#125;</span><br><span class="line">101:24.74     | |_- method `intersection` not found <span class="keyword">for</span> this</span><br><span class="line">101:24.74 ...</span><br><span class="line">101:24.74 126 |           self.intersection(Self::CHROME_AND_UA_ONLY | Self::WEBKIT_PREFIX)</span><br><span class="line">101:24.74     |                ^^^^^^^^^^^^ <span class="built_in">help</span>: there is an associated <span class="keyword">function</span> with a similar name: `intersects`</span><br><span class="line">101:24.79 error[E0599]: no method named `intersection` found <span class="keyword">for</span> struct `FeatureFlags` <span class="keyword">in</span> the current scope</span><br><span class="line">101:24.79    --&gt; servo/components/style/queries/feature.rs:139:14</span><br><span class="line">101:24.79     |</span><br><span class="line">101:24.79 103 | / bitflags! &#123;</span><br><span class="line">101:24.79 104 | |     /// Different flags or toggles that change how a expression is parsed or</span><br><span class="line">101:24.79 105 | |     /// evaluated.</span><br><span class="line">101:24.79 106 | |     <span class="comment">#[derive(ToShmem)]</span></span><br><span class="line">101:24.79 ...   |</span><br><span class="line">101:24.79 120 | |     &#125;</span><br><span class="line">101:24.79 121 | | &#125;</span><br><span class="line">101:24.79     | |_- method `intersection` not found <span class="keyword">for</span> this</span><br><span class="line">101:24.79 ...</span><br><span class="line">101:24.79 139 |           self.intersection(Self::all_container_axes())</span><br><span class="line">101:24.79     |                ^^^^^^^^^^^^ <span class="built_in">help</span>: there is an associated <span class="keyword">function</span> with a similar name: `intersects`</span><br><span class="line">102:23.55 For more information about this error, try `rustc --explain E0599`.</span><br></pre></td></tr></table></figure>
+
+<p>报错的是<code>servo/components/style/queries/feature.rs</code>中的<a target="_blank" rel="noopener" href="https://github.com/makotokato/gecko-dev/blob/riscv64/servo/components/style/queries/feature.rs#L103">代码</a></p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">bitflags!</span> &#123;</span><br><span class="line">    <span class="comment">/// Different flags or toggles that change how a expression is parsed or</span></span><br><span class="line">    <span class="comment">/// evaluated.</span></span><br><span class="line">    <span class="meta">#[derive(ToShmem)]</span></span><br><span class="line">    <span class="keyword">pub</span> <span class="keyword">struct</span> <span class="title class_">FeatureFlags</span> : <span class="type">u8</span> &#123;</span><br><span class="line">        <span class="comment">/// The feature should only be parsed in chrome and ua sheets.</span></span><br><span class="line">        <span class="keyword">const</span> CHROME_AND_UA_ONLY = <span class="number">1</span> &lt;&lt; <span class="number">0</span>;</span><br><span class="line">        <span class="comment">/// The feature requires a -webkit- prefix.</span></span><br><span class="line">        <span class="keyword">const</span> WEBKIT_PREFIX = <span class="number">1</span> &lt;&lt; <span class="number">1</span>;</span><br><span class="line">        <span class="comment">/// The feature requires the inline-axis containment.</span></span><br><span class="line">        <span class="keyword">const</span> CONTAINER_REQUIRES_INLINE_AXIS = <span class="number">1</span> &lt;&lt; <span class="number">2</span>;</span><br><span class="line">        <span class="comment">/// The feature requires the block-axis containment.</span></span><br><span class="line">        <span class="keyword">const</span> CONTAINER_REQUIRES_BLOCK_AXIS = <span class="number">1</span> &lt;&lt; <span class="number">3</span>;</span><br><span class="line">        <span class="comment">/// The feature requires containment in the physical width axis.</span></span><br><span class="line">        <span class="keyword">const</span> CONTAINER_REQUIRES_WIDTH_AXIS = <span class="number">1</span> &lt;&lt; <span class="number">4</span>;</span><br><span class="line">        <span class="comment">/// The feature requires containment in the physical height axis.</span></span><br><span class="line">        <span class="keyword">const</span> CONTAINER_REQUIRES_HEIGHT_AXIS = <span class="number">1</span> &lt;&lt; <span class="number">5</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">impl</span> <span class="title class_">FeatureFlags</span> &#123;</span><br><span class="line">    <span class="comment">/// Returns parsing requirement flags.</span></span><br><span class="line">    <span class="keyword">pub</span> <span class="keyword">fn</span> <span class="title function_">parsing_requirements</span>(<span class="keyword">self</span>) <span class="punctuation">-&gt;</span> <span class="keyword">Self</span> &#123;</span><br><span class="line">        <span class="keyword">self</span>.<span class="title function_ invoke__">intersection</span>(<span class="keyword">Self</span>::CHROME_AND_UA_ONLY | <span class="keyword">Self</span>::WEBKIT_PREFIX)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/// Returns all the container axis flags.</span></span><br><span class="line">    <span class="keyword">pub</span> <span class="keyword">fn</span> <span class="title function_">all_container_axes</span>() <span class="punctuation">-&gt;</span> <span class="keyword">Self</span> &#123;</span><br><span class="line">        <span class="keyword">Self</span>::CONTAINER_REQUIRES_INLINE_AXIS |</span><br><span class="line">            <span class="keyword">Self</span>::CONTAINER_REQUIRES_BLOCK_AXIS |</span><br><span class="line">            <span class="keyword">Self</span>::CONTAINER_REQUIRES_WIDTH_AXIS |</span><br><span class="line">            <span class="keyword">Self</span>::CONTAINER_REQUIRES_HEIGHT_AXIS</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/// Returns our subset of container axis flags.</span></span><br><span class="line">    <span class="keyword">pub</span> <span class="keyword">fn</span> <span class="title function_">container_axes</span>(<span class="keyword">self</span>) <span class="punctuation">-&gt;</span> <span class="keyword">Self</span> &#123;</span><br><span class="line">        <span class="keyword">self</span>.<span class="title function_ invoke__">intersection</span>(<span class="keyword">Self</span>::<span class="title function_ invoke__">all_container_axes</span>())</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里面提供 <code>intersection</code> 方法的宏是 <code>bitflags</code>，在正常情况下该宏展开是有 <code>intersection</code>的，故猜测可能是 rust 稍微有点不对劲。</p>
+<h3 id="折腾-cargo-expand"><a href="#折腾-cargo-expand" class="headerlink" title="折腾 cargo expand"></a>折腾 cargo expand</h3><p>进行到这，想采用 <code>cargo expand</code> 工具来尝试展开宏，看看是宏展开有问题，还是其他的问题。<br>运行 <code>cargo expand</code>，提示错误:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cargo <span class="built_in">expand</span> --lib main</span><br><span class="line">ERROR: cannot <span class="built_in">expand</span> single item (main) without rustfmt.</span><br><span class="line">Install rustfmt by running `rustup component add rustfmt --toolchain nightly`.</span><br></pre></td></tr></table></figure>
+
+<p>查询 <code>rustfmt</code></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">pacman -F rustfmt</span><br><span class="line">extra/rust 1:1.62.0-1 [installed]</span><br><span class="line">    usr/bin/rustfmt</span><br><span class="line">community/rustup 1.25.1-1</span><br><span class="line">    usr/bin/rustfmt</span><br></pre></td></tr></table></figure>
+
+<p><code>rust</code> 里面是有<code>rustfmt</code>, 为啥<code>cargo expand</code>还需要通过 <code>rustup</code> 来装 <code>rustfmt</code>? 我不理解。同时感谢 c10s 发的 issus <a target="_blank" rel="noopener" href="https://github.com/dtolnay/cargo-expand/issues/158">Can’t use with rustfmt installed not by rustup</a>，虽然被光速关闭。</p>
+<p><strong>感谢乔老师：</strong> 乔老师 revert 了之前的 tootoolchain_find 的 patch,使得 cargo expand 能够使用 rust 的 rustfmt.</p>
+<p>然后发现 cargo expand 是在自己代码里面找 nightly toolchain 调用的，然而目前各大发行版打的 rust 都是正式版的。根本没有 nightly 的 rust。</p>
+<p>该方法暂时卡住。</p>
+<h2 id="被点醒"><a href="#被点醒" class="headerlink" title="被点醒"></a>被点醒</h2><p><img src="/2022/08/29/love-and-hatred-with-firefox/1.jpg" alt="图片加载失败"><br><img src="/2022/08/29/love-and-hatred-with-firefox/1.2.1.jpg" alt="图片加载失败"></p>
+<p>感谢大佬发现了我之前没发现的华点。</p>
+<h2 id="这个-patch-怎么这么大"><a href="#这个-patch-怎么这么大" class="headerlink" title="这个 patch 怎么这么大"></a>这个 patch 怎么这么大</h2><p>发现 <code>bitflags</code>产生的问题后，就开始解决。顺便跟着 <code>makotokato</code>新的 pr 来更新一下旧版的 patch。</p>
+<p>诶，更新了 <code>midir</code>， 更一下，更一下。<code>patch</code> 达到了惊人了 2G。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[eastdong@East Downloads]$ <span class="built_in">ls</span> -l makotokato-riscv64-support-and-zenithal-backported.patch</span><br><span class="line">-rw-r--r-- 1 eastdong eastdong 238161059 Aug 28 15:56 makotokato-riscv64-support-and-zenithal-backported.patch</span><br></pre></td></tr></table></figure>
+
+<p>这么大，不太对劲。看看这个 commit, <a target="_blank" rel="noopener" href="https://github.com/makotokato/gecko-dev/commit/74611bdf22b13f4f7ffc34a4f44b46dffe841d47"><code>./mach vendor rust</code></a> , 更新了很多库文件。</p>
+<p>查看 firefox 文档，发现可以使用 <code>./mach vendor </code> 来更新库文件。这条命令会读取在 Cargo.lock 中写的软件版本，从网络上下载库。同时还会检查目录下依赖版本的冲突情况，自动替换为合适的依赖版本。</p>
+<h2 id="mach-vendor-rust"><a href="#mach-vendor-rust" class="headerlink" title="./mach vendor rust"></a><code>./mach vendor rust</code></h2><h3 id="初次使用"><a href="#初次使用" class="headerlink" title="初次使用"></a>初次使用</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">The details of the failure are as follows:</span><br><span class="line"></span><br><span class="line">mozversioncontrol.InvalidRepoPath: Unknown VCS, or not a <span class="built_in">source</span> checkout: /build/firefox/src/firefox-104.0.1</span><br><span class="line"></span><br><span class="line">  File <span class="string">&quot;/build/firefox/src/firefox-104.0.1/python/mozbuild/mozbuild/vendor/mach_commands.py&quot;</span>, line 200, <span class="keyword">in</span> vendor_rust</span><br><span class="line">    ok = vendor_command.vendor(**kwargs)</span><br><span class="line">  File <span class="string">&quot;/build/firefox/src/firefox-104.0.1/python/mozbuild/mozbuild/vendor/vendor_rust.py&quot;</span>, line 596, <span class="keyword">in</span> vendor</span><br><span class="line">    <span class="keyword">if</span> not ignore_modified and self.has_modified_files():</span><br><span class="line">  File <span class="string">&quot;/build/firefox/src/firefox-104.0.1/python/mozbuild/mozbuild/vendor/vendor_rust.py&quot;</span>, line 198, <span class="keyword">in</span> has_modified_files</span><br><span class="line">    <span class="keyword">for</span> f <span class="keyword">in</span> self.repository.get_changed_files(<span class="string">&quot;M&quot;</span>)</span><br><span class="line">  File <span class="string">&quot;/build/firefox/src/firefox-104.0.1/python/mozbuild/mozbuild/util.py&quot;</span>, line 1081, <span class="keyword">in</span> __get__</span><br><span class="line">    setattr(instance, name, self.func(instance))</span><br><span class="line">  File <span class="string">&quot;/build/firefox/src/firefox-104.0.1/python/mozbuild/mozbuild/base.py&quot;</span>, line 445, <span class="keyword">in</span> repository</span><br><span class="line">    <span class="built_in">return</span> get_repository_object(self.topsrcdir)</span><br><span class="line">  File <span class="string">&quot;/build/firefox/src/firefox-104.0.1/python/mozversioncontrol/mozversioncontrol/__init__.py&quot;</span>, line 700, <span class="keyword">in</span> get_repository_object</span><br><span class="line">    raise InvalidRepoPath(f<span class="string">&quot;Unknown VCS, or not a source checkout: &#123;path&#125;&quot;</span>)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p><code>./mach vendor rust</code> 会通过读取 VCS 来判断是否在开发环境。但是可以使用 <code>--ignore-modified</code> 来跳过检查。</p>
+<p>经过测试，在在 git 仓库里跑 <code>mach vendor rust</code> 是可以运行的</p>
+<h3 id="mach-vendor-rust-ignore-modified"><a href="#mach-vendor-rust-ignore-modified" class="headerlink" title="./mach vendor rust --ignore-modified"></a><code>./mach vendor rust --ignore-modified</code></h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$./mach vendor rust --ignore-modified</span><br><span class="line"></span><br><span class="line">error: no such subcommand: `vet`</span><br><span class="line"></span><br><span class="line">        Did you mean `<span class="built_in">fmt</span>`?</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>读一下 <code>vendor rust</code> 的源代码。找到 <a target="_blank" rel="noopener" href="https://github.com/mozilla/gecko-dev/blob/master/python/mozbuild/mozbuild/vendor/vendor_rust.py#L761">vet</a> 的定义</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Only emit warnings for cargo-vet for now.</span></span><br><span class="line">env = os.environ.copy()</span><br><span class="line">env[<span class="string">&quot;PATH&quot;</span>] = os.pathsep.join(</span><br><span class="line">    (</span><br><span class="line">        <span class="built_in">str</span>(Path(cargo).parent),</span><br><span class="line">        os.environ[<span class="string">&quot;PATH&quot;</span>],</span><br><span class="line">    )</span><br><span class="line">)</span><br><span class="line">flags = [<span class="string">&quot;--output-format=json&quot;</span>]</span><br><span class="line"><span class="keyword">if</span> <span class="string">&quot;MOZ_AUTOMATION&quot;</span> <span class="keyword">in</span> os.environ:</span><br><span class="line">    flags.append(<span class="string">&quot;--locked&quot;</span>)</span><br><span class="line">    flags.append(<span class="string">&quot;--frozen&quot;</span>)</span><br><span class="line">res = cargo_vet(</span><br><span class="line">    self,</span><br><span class="line">    flags,</span><br><span class="line">    stdout=subprocess.PIPE,</span><br><span class="line">    env=env,</span><br><span class="line">)</span><br><span class="line"><span class="keyword">if</span> res.returncode:</span><br><span class="line">    vet = json.loads(res.stdout)</span><br><span class="line">    logged_error = <span class="literal">False</span></span><br><span class="line">    <span class="keyword">for</span> failure <span class="keyword">in</span> vet.get(<span class="string">&quot;failures&quot;</span>, []):</span><br><span class="line">        failure[<span class="string">&quot;crate&quot;</span>] = failure.pop(<span class="string">&quot;name&quot;</span>)</span><br><span class="line">        self.log(</span><br><span class="line">            logging.ERROR,</span><br><span class="line">            <span class="string">&quot;cargo_vet_failed&quot;</span>,</span><br><span class="line">            failure,</span><br><span class="line">            <span class="string">&quot;Missing audit for &#123;crate&#125;:&#123;version&#125; (requires &#123;missing_criteria&#125;).&quot;</span></span><br><span class="line">            <span class="string">&quot; Run `./mach cargo vet` for more information.&quot;</span>,</span><br><span class="line">        )</span><br><span class="line">        logged_error = <span class="literal">True</span></span><br><span class="line">    <span class="comment"># <span class="doctag">NOTE:</span> This could log more information, but the violation JSON</span></span><br><span class="line">    <span class="comment"># output isn&#x27;t super stable yet, so it&#x27;s probably simpler to tell</span></span><br><span class="line">    <span class="comment"># the caller to run `./mach cargo vet` directly.</span></span><br><span class="line">    <span class="keyword">for</span> key <span class="keyword">in</span> vet.get(<span class="string">&quot;violations&quot;</span>, &#123;&#125;).keys():</span><br><span class="line">        self.log(</span><br><span class="line">            logging.ERROR,</span><br><span class="line">            <span class="string">&quot;cargo_vet_failed&quot;</span>,</span><br><span class="line">            &#123;<span class="string">&quot;key&quot;</span>: key&#125;,</span><br><span class="line">            <span class="string">&quot;Violation conflict for &#123;key&#125;. Run `./mach cargo vet` for more information.&quot;</span>,</span><br><span class="line">        )</span><br><span class="line">        logged_error = <span class="literal">True</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>我们可以看到 <code>vet</code> 是其实是将 <code>res</code> 的 <code>stdout</code> 编码为 python 对象。</p>
+<p><code>res = cargo_vet()</code> ,阅读前面的代码 <code>from mozbuild.mach_commands import cargo_vet</code>确定 cargo_vet 是由 mach_commands 引入的。</p>
+<p>根据 <a target="_blank" rel="noopener" href="https://github.com/mozilla/gecko-dev/blob/master/python/mozbuild/mozbuild/mach_commands.py#L204"><code>mach_commands.py</code></a>中的代码。</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">cargo_vet</span>(<span class="params">command_context, arguments, stdout=<span class="literal">None</span>, env=os.environ</span>):</span><br><span class="line">    <span class="keyword">from</span> mozbuild.bootstrap <span class="keyword">import</span> bootstrap_toolchain</span><br><span class="line"></span><br><span class="line">    <span class="comment"># Logging of commands enables logging from `bootstrap_toolchain` that we</span></span><br><span class="line">    <span class="comment"># don&#x27;t want to expose. Disable them temporarily.</span></span><br><span class="line">    logger = logging.getLogger(<span class="string">&quot;gecko_taskgraph.generator&quot;</span>)</span><br><span class="line">    level = logger.getEffectiveLevel()</span><br><span class="line">    logger.setLevel(logging.ERROR)</span><br><span class="line"></span><br><span class="line">    env = env.copy()</span><br><span class="line">    cargo_vet = bootstrap_toolchain(<span class="string">&quot;cargo-vet&quot;</span>)</span><br><span class="line">    <span class="keyword">if</span> cargo_vet:</span><br><span class="line">        env[<span class="string">&quot;PATH&quot;</span>] = os.pathsep.join([cargo_vet, env[<span class="string">&quot;PATH&quot;</span>]])</span><br><span class="line">    logger.setLevel(level)</span><br></pre></td></tr></table></figure>
+
+<p>可以简单的理解为通过 <code>bootstrap_toolchain</code> 来 build 一个 <code>cargo-vet</code> 并将其加入到 PATH 中。然后就卡住了。</p>
+<p>研究了一下 <code>bootstrap_toolchain</code> 的代码没有找到很好的解决方案。</p>
+<h2 id="更换思路"><a href="#更换思路" class="headerlink" title="更换思路"></a>更换思路</h2><p>既然我们没办法解决找不到 <code>vet</code> ，那我们可以尝试解决调用 <code>vet</code> 的函数。</p>
+<h3 id="mach-vendor-rust-ignore-modified-有-VCS-状态下"><a href="#mach-vendor-rust-ignore-modified-有-VCS-状态下" class="headerlink" title="./mach vendor rust --ignore-modified 有 VCS 状态下"></a><code>./mach vendor rust --ignore-modified</code> 有 VCS 状态下</h3><p>经过测试，在 git 仓库里跑 <code>mach vendoro rust --ignre-modified</code> 没问题。这就是有 vcs 的状态</p>
+<h3 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h3><p>阅读 <code>vendor rust</code> 代码，发现 <code>cargo_vet</code> 的作用是验证第三方库文件是受信任的。</p>
+<p>既然找不到 <code>vet</code> ，那我们可以注释所有和 <code>vet</code> 相关代码，并且返回 <code>True</code> 即可使得编译正常运行。</p>
+<p>感谢 gentoo  小队的大佬提供的解决方案。具体代码在 <a target="_blank" rel="noopener" href="https://github.com/gentoo/riscv/blob/master/www-client/firefox/files/firefox-riscv64-hack.patch">https://github.com/gentoo/riscv/blob/master/www-client/firefox/files/firefox-riscv64-hack.patch</a> 。</p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">首页</a></li>
+        
+          <li><a href="/about/">关于</a></li>
+        
+          <li><a href="/archives/">归档</a></li>
+        
+          <li><a target="_blank" rel="noopener" href="http://github.com/probberechts">项目</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%B5%B7%E5%9B%A0"><span class="toc-number">1.</span> <span class="toc-text">起因</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8A%98%E8%85%BE-cargo-expand"><span class="toc-number">1.1.</span> <span class="toc-text">折腾 cargo expand</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A2%AB%E7%82%B9%E9%86%92"><span class="toc-number">2.</span> <span class="toc-text">被点醒</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BF%99%E4%B8%AA-patch-%E6%80%8E%E4%B9%88%E8%BF%99%E4%B9%88%E5%A4%A7"><span class="toc-number">3.</span> <span class="toc-text">这个 patch 怎么这么大</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#mach-vendor-rust"><span class="toc-number">4.</span> <span class="toc-text">.&#x2F;mach vendor rust</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%9D%E6%AC%A1%E4%BD%BF%E7%94%A8"><span class="toc-number">4.1.</span> <span class="toc-text">初次使用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#mach-vendor-rust-ignore-modified"><span class="toc-number">4.2.</span> <span class="toc-text">.&#x2F;mach vendor rust --ignore-modified</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9B%B4%E6%8D%A2%E6%80%9D%E8%B7%AF"><span class="toc-number">5.</span> <span class="toc-text">更换思路</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#mach-vendor-rust-ignore-modified-%E6%9C%89-VCS-%E7%8A%B6%E6%80%81%E4%B8%8B"><span class="toc-number">5.1.</span> <span class="toc-text">.&#x2F;mach vendor rust --ignore-modified 有 VCS 状态下</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="toc-number">5.2.</span> <span class="toc-text">解决方案</span></a></li></ol></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://ieast.github.io/2022/08/29/love-and-hatred-with-firefox/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://ieast.github.io/2022/08/29/love-and-hatred-with-firefox/&text=与 firefox 的爱恨情仇"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://ieast.github.io/2022/08/29/love-and-hatred-with-firefox/&title=与 firefox 的爱恨情仇"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://ieast.github.io/2022/08/29/love-and-hatred-with-firefox/&is_video=false&description=与 firefox 的爱恨情仇"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=与 firefox 的爱恨情仇&body=Check out this article: http://ieast.github.io/2022/08/29/love-and-hatred-with-firefox/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://ieast.github.io/2022/08/29/love-and-hatred-with-firefox/&title=与 firefox 的爱恨情仇"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://ieast.github.io/2022/08/29/love-and-hatred-with-firefox/&title=与 firefox 的爱恨情仇"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://ieast.github.io/2022/08/29/love-and-hatred-with-firefox/&title=与 firefox 的爱恨情仇"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://ieast.github.io/2022/08/29/love-and-hatred-with-firefox/&title=与 firefox 的爱恨情仇"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://ieast.github.io/2022/08/29/love-and-hatred-with-firefox/&name=与 firefox 的爱恨情仇&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://ieast.github.io/2022/08/29/love-and-hatred-with-firefox/&t=与 firefox 的爱恨情仇"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2020-2023
+    eastdong
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/probberechts">项目</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>

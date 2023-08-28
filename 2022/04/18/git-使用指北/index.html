@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="第一次使用 git 仓库12345git init(建立本地git仓库)git add XXX(添加文件到本地git仓库)git commit -m &quot;XXXX&quot;(添加commit 信息)git remote add origin git@github.com:name&#x2F;project.git (添加github仓库)$ git push -u origin master (提">
+<meta property="og:type" content="article">
+<meta property="og:title" content="git 使用指北">
+<meta property="og:url" content="http://ieast.github.io/2022/04/18/git-%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8C%97/index.html">
+<meta property="og:site_name" content="EastDong&#39;s Blog">
+<meta property="og:description" content="第一次使用 git 仓库12345git init(建立本地git仓库)git add XXX(添加文件到本地git仓库)git commit -m &quot;XXXX&quot;(添加commit 信息)git remote add origin git@github.com:name&#x2F;project.git (添加github仓库)$ git push -u origin master (提">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-04-18T06:03:37.000Z">
+<meta property="article:modified_time" content="2023-08-28T08:26:50.005Z">
+<meta property="article:author" content="eastdong">
+<meta property="article:tag" content="git">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>git 使用指北</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-QSLGQRJWYR"></script>
+  <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-QSLGQRJWYR');
+  </script>
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/probberechts">项目</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇" href="/2022/04/18/hexo-tag-%E9%A1%B5%E9%9D%A2%E4%B8%8D%E6%98%BE%E7%A4%BA/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/2020/07/21/warframe/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://ieast.github.io/2022/04/18/git-%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8C%97/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://ieast.github.io/2022/04/18/git-%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8C%97/&text=git 使用指北"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://ieast.github.io/2022/04/18/git-%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8C%97/&title=git 使用指北"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://ieast.github.io/2022/04/18/git-%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8C%97/&is_video=false&description=git 使用指北"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=git 使用指北&body=Check out this article: http://ieast.github.io/2022/04/18/git-%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8C%97/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://ieast.github.io/2022/04/18/git-%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8C%97/&title=git 使用指北"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://ieast.github.io/2022/04/18/git-%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8C%97/&title=git 使用指北"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://ieast.github.io/2022/04/18/git-%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8C%97/&title=git 使用指北"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://ieast.github.io/2022/04/18/git-%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8C%97/&title=git 使用指北"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://ieast.github.io/2022/04/18/git-%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8C%97/&name=git 使用指北&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://ieast.github.io/2022/04/18/git-%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8C%97/&t=git 使用指北"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%B8%80%E6%AC%A1%E4%BD%BF%E7%94%A8-git-%E4%BB%93%E5%BA%93"><span class="toc-number">1.</span> <span class="toc-text">第一次使用 git 仓库</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%A5%E5%90%8E%E6%8F%90%E4%BA%A4"><span class="toc-number">2.</span> <span class="toc-text">以后提交</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%BA%8C%E4%BB%93%E5%BA%93"><span class="toc-number">3.</span> <span class="toc-text">第二仓库</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B8%B8%E8%A7%81%E7%94%A8%E6%B3%95"><span class="toc-number">3.1.</span> <span class="toc-text">常见用法</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#git-%E9%85%8D%E7%BD%AE"><span class="toc-number">4.</span> <span class="toc-text">git 配置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#git-%E5%BC%BA%E5%88%B6%E6%8F%90%E4%BA%A4"><span class="toc-number">5.</span> <span class="toc-text">git 强制提交</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%A0%E9%99%A4%E5%A4%B1%E6%95%88%E7%9A%84%E6%9C%AC%E5%9C%B0%E5%88%86%E6%94%AF"><span class="toc-number">6.</span> <span class="toc-text">删除失效的本地分支</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#git-checkout-b-xxx-yyyy"><span class="toc-number">7.</span> <span class="toc-text">git checkout -b xxx yyyy</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8A%9F%E8%83%BD"><span class="toc-number">7.1.</span> <span class="toc-text">功能</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#git-rebase"><span class="toc-number">8.</span> <span class="toc-text">git rebase</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8F%90%E7%A4%BA"><span class="toc-number">8.1.</span> <span class="toc-text">提示</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95"><span class="toc-number">8.2.</span> <span class="toc-text">使用方法</span></a></li></ol></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        git 使用指北
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">eastdong</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2022-04-18T06:03:37.000Z" class="dt-published" itemprop="datePublished">2022-04-18</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/%E6%95%99%E7%A8%8B/">教程</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/git/" rel="tag">git</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <h2 id="第一次使用-git-仓库"><a href="#第一次使用-git-仓库" class="headerlink" title="第一次使用 git 仓库"></a>第一次使用 git 仓库</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">git init(建立本地git仓库)</span><br><span class="line">git add XXX(添加文件到本地git仓库)</span><br><span class="line">git commit -m <span class="string">&quot;XXXX&quot;</span>(添加commit 信息)</span><br><span class="line">git remote add origin git@github.com:name/project.git (添加github仓库)</span><br><span class="line">$ git push -u origin master (提交代码)</span><br></pre></td></tr></table></figure>
+
+<h2 id="以后提交"><a href="#以后提交" class="headerlink" title="以后提交"></a>以后提交</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git add XXX(添加文件到本地git仓库)</span><br><span class="line">git commit -m <span class="string">&quot;XXXX&quot;</span>(添加commit 信息)</span><br><span class="line">git push (提交代码)</span><br></pre></td></tr></table></figure>
+
+<h2 id="第二仓库"><a href="#第二仓库" class="headerlink" title="第二仓库"></a>第二仓库</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git remote add name xx@xxx.com:name/project.git (添加第二git仓库， name 自定义)</span><br><span class="line">git remote <span class="built_in">rm</span> name (删除仓库)</span><br><span class="line">git push name master (提交指定仓库)</span><br></pre></td></tr></table></figure>
+
+<h3 id="常见用法"><a href="#常见用法" class="headerlink" title="常见用法"></a>常见用法</h3><p>从上游获取代码，同步到自己的仓库</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git remote add upstream xxxx</span><br><span class="line">git pull upsterm</span><br><span class="line">git push origin master</span><br></pre></td></tr></table></figure>
+
+<h2 id="git-配置"><a href="#git-配置" class="headerlink" title="git 配置"></a>git 配置</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git config --global user.name <span class="string">&quot;name&quot;</span></span><br><span class="line">git config --global user.email email</span><br><span class="line">git config --list //显示所有配置</span><br></pre></td></tr></table></figure>
+
+<h2 id="git-强制提交"><a href="#git-强制提交" class="headerlink" title="git 强制提交"></a>git 强制提交</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git push -f origin master</span><br></pre></td></tr></table></figure>
+
+<h2 id="删除失效的本地分支"><a href="#删除失效的本地分支" class="headerlink" title="删除失效的本地分支"></a>删除失效的本地分支</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git remote prune origin</span><br></pre></td></tr></table></figure>
+
+<h2 id="git-checkout-b-xxx-yyyy"><a href="#git-checkout-b-xxx-yyyy" class="headerlink" title="git checkout -b xxx yyyy"></a>git checkout -b xxx yyyy</h2><h3 id="功能"><a href="#功能" class="headerlink" title="功能"></a>功能</h3><p>根据特定版本的分支创建新分支</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git checkout -b newbreach1 origin/master  <span class="comment">#根据 origin/master 创建新分支，同时也可以通过 `upstream`, `commit`， `tag` 创建分支</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="git-rebase"><a href="#git-rebase" class="headerlink" title="git rebase"></a>git rebase</h2><h3 id="提示"><a href="#提示" class="headerlink" title="提示"></a>提示</h3><p>需要在添加 <a href="#%E7%AC%AC%E4%BA%8C%E4%BB%93%E5%BA%93"><code>upstream</code></a> 的前提下使用。</p>
+<h3 id="使用方法"><a href="#使用方法" class="headerlink" title="使用方法"></a>使用方法</h3><ol>
+<li><code>git switch</code> 切换到需要 <code>rebase</code> 的分支。</li>
+<li><code>git fetch upstream</code> 将 <code>upstream</code> 的最新分支拉到本地。</li>
+<li><code>git rebase upstream/master</code> rebase分支。(这时候分支已经干净了)</li>
+<li><code>git push -f </code> 提交分支。</li>
+</ol>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">首页</a></li>
+        
+          <li><a href="/about/">关于</a></li>
+        
+          <li><a href="/archives/">归档</a></li>
+        
+          <li><a target="_blank" rel="noopener" href="http://github.com/probberechts">项目</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%B8%80%E6%AC%A1%E4%BD%BF%E7%94%A8-git-%E4%BB%93%E5%BA%93"><span class="toc-number">1.</span> <span class="toc-text">第一次使用 git 仓库</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%A5%E5%90%8E%E6%8F%90%E4%BA%A4"><span class="toc-number">2.</span> <span class="toc-text">以后提交</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%BA%8C%E4%BB%93%E5%BA%93"><span class="toc-number">3.</span> <span class="toc-text">第二仓库</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B8%B8%E8%A7%81%E7%94%A8%E6%B3%95"><span class="toc-number">3.1.</span> <span class="toc-text">常见用法</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#git-%E9%85%8D%E7%BD%AE"><span class="toc-number">4.</span> <span class="toc-text">git 配置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#git-%E5%BC%BA%E5%88%B6%E6%8F%90%E4%BA%A4"><span class="toc-number">5.</span> <span class="toc-text">git 强制提交</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%A0%E9%99%A4%E5%A4%B1%E6%95%88%E7%9A%84%E6%9C%AC%E5%9C%B0%E5%88%86%E6%94%AF"><span class="toc-number">6.</span> <span class="toc-text">删除失效的本地分支</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#git-checkout-b-xxx-yyyy"><span class="toc-number">7.</span> <span class="toc-text">git checkout -b xxx yyyy</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8A%9F%E8%83%BD"><span class="toc-number">7.1.</span> <span class="toc-text">功能</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#git-rebase"><span class="toc-number">8.</span> <span class="toc-text">git rebase</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8F%90%E7%A4%BA"><span class="toc-number">8.1.</span> <span class="toc-text">提示</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95"><span class="toc-number">8.2.</span> <span class="toc-text">使用方法</span></a></li></ol></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://ieast.github.io/2022/04/18/git-%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8C%97/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://ieast.github.io/2022/04/18/git-%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8C%97/&text=git 使用指北"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://ieast.github.io/2022/04/18/git-%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8C%97/&title=git 使用指北"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://ieast.github.io/2022/04/18/git-%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8C%97/&is_video=false&description=git 使用指北"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=git 使用指北&body=Check out this article: http://ieast.github.io/2022/04/18/git-%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8C%97/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://ieast.github.io/2022/04/18/git-%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8C%97/&title=git 使用指北"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://ieast.github.io/2022/04/18/git-%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8C%97/&title=git 使用指北"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://ieast.github.io/2022/04/18/git-%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8C%97/&title=git 使用指北"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://ieast.github.io/2022/04/18/git-%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8C%97/&title=git 使用指北"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://ieast.github.io/2022/04/18/git-%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8C%97/&name=git 使用指北&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://ieast.github.io/2022/04/18/git-%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8C%97/&t=git 使用指北"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2020-2023
+    eastdong
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/probberechts">项目</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>
